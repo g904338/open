@@ -3,80 +3,124 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>個人化用藥衛教單</title>
+  <title>用藥衛教單</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="topbar no-print">
-    <h1>個人化用藥衛教單產生器</h1>
-    <span class="sub">年齡 × 腎功能 × 用藥 → 一頁衛教單（資料來源：健保署藥品仿單）</span>
+    <div class="brand">
+      <span class="eyebrow">社區藥局 · 長者用藥評估</span>
+      <h1>用藥衛教單</h1>
+    </div>
+    <div class="top-actions">
+      <button id="demo" class="btn ghost" type="button">載入範例</button>
+      <button id="reset" class="btn ghost" type="button">清除</button>
+      <button id="print" class="btn primary" type="button">列印 / 存成 PDF</button>
+    </div>
   </header>
 
   <main class="layout">
-    <!-- 左：輸入 -->
-    <section class="panel no-print" id="form">
-      <h2>1. 病人基本資料</h2>
-      <div class="grid2">
-        <label>姓名（選填）<input id="name" type="text" placeholder="可留白"></label>
-        <label><span>年齡 <span class="req">*</span></span><input id="age" type="number" min="0" max="120" placeholder="歲"></label>
-        <label>性別
-          <select id="sex"><option value="M">男</option><option value="F">女</option></select>
+    <!-- ================= 左：輸入 ================= -->
+    <div class="col-input no-print">
+
+      <section class="card">
+        <div class="card-head"><span class="num">01</span><h2>病人資料</h2></div>
+        <div class="row-fields">
+          <label class="field">
+            <span class="lbl">姓氏</span>
+            <input id="surname" type="text" maxlength="4" placeholder="例：王">
+          </label>
+          <div class="field">
+            <span class="lbl">性別</span>
+            <div class="seg" role="radiogroup" aria-label="性別">
+              <label><input type="radio" name="sex" value="M" checked><span>男</span></label>
+              <label><input type="radio" name="sex" value="F"><span>女</span></label>
+            </div>
+          </div>
+          <label class="field">
+            <span class="lbl">年齡</span>
+            <div class="unit"><input id="age" type="number" min="0" max="120" inputmode="numeric" placeholder="例：78"><em>歲</em></div>
+          </label>
+        </div>
+
+        <details id="renalBox" class="optional">
+          <summary><span>腎功能</span><small>選填・有檢驗資料再填</small><b id="renalBadge" class="badge"></b></summary>
+          <div class="seg seg-sm">
+            <label><input type="radio" name="mode" value="calc" checked><span>用肌酸酐計算</span></label>
+            <label><input type="radio" name="mode" value="direct"><span>直接填 eGFR / CrCl</span></label>
+          </div>
+          <div class="row-fields" id="calcFields">
+            <label class="field"><span class="lbl">肌酸酐 Scr</span><div class="unit"><input id="scr" type="number" min="0.1" step="0.01" placeholder="1.2"><em>mg/dL</em></div></label>
+            <label class="field"><span class="lbl">體重 <small>(算 CrCl 用)</small></span><div class="unit"><input id="weight" type="number" min="1" step="0.1" placeholder="60"><em>kg</em></div></label>
+          </div>
+          <div class="row-fields hidden" id="directFields">
+            <label class="field"><span class="lbl">eGFR</span><div class="unit"><input id="egfrIn" type="number" min="0" step="0.1"><em>mL/min</em></div></label>
+            <label class="field"><span class="lbl">CrCl</span><div class="unit"><input id="crclIn" type="number" min="0" step="0.1"><em>mL/min</em></div></label>
+            <label class="field"><span class="lbl">肌酸酐 <small>(選填)</small></span><div class="unit"><input id="scrDirect" type="number" min="0.1" step="0.01"><em>mg/dL</em></div></label>
+            <label class="field"><span class="lbl">體重 <small>(選填)</small></span><div class="unit"><input id="weightDirect" type="number" min="1" step="0.1"><em>kg</em></div></label>
+          </div>
+          <label class="check"><input id="dialysis" type="checkbox"> 目前洗腎（透析）中</label>
+          <div id="renalResult" class="renal-result"></div>
+        </details>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><span class="num">02</span><h2>使用藥物</h2><span id="drugCount" class="count"></span></div>
+        <div class="search">
+          <input id="drugSearch" type="text" autocomplete="off" placeholder="搜尋學名、商品名或中文名，按 Enter 加入">
+          <ul id="suggest" class="suggest hidden"></ul>
+        </div>
+        <details class="bulk">
+          <summary>一次貼上多個藥名</summary>
+          <textarea id="bulkText" rows="5" placeholder="每行一個，或用逗號、頓號分隔，例如：&#10;metformin&#10;脈優&#10;Xanax、普拿疼"></textarea>
+          <div class="bulk-actions"><span id="bulkMsg" class="muted"></span><button id="bulkAdd" class="btn small" type="button">全部加入</button></div>
+        </details>
+        <ol id="selected" class="drug-list"></ol>
+        <p id="drugEmpty" class="empty">尚未加入藥物</p>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><span class="num">03</span><h2>衛教項目</h2><span class="hint-inline">勾選的項目才會印出</span></div>
+        <p class="muted small">系統已依年齡、腎功能與用藥 <span class="sugg">建議</span> 勾選，請藥師確認。</p>
+        <div id="tipList" class="tip-list"></div>
+        <label class="field mt">
+          <span class="lbl">其他叮嚀 <small>(每行一項)</small></span>
+          <textarea id="customTips" rows="2" placeholder="例：下次回診請空腹抽血"></textarea>
         </label>
-        <label>體重<input id="weight" type="number" min="1" step="0.1" placeholder="kg（計算 CrCl 用）"></label>
+        <div class="row-fields mt">
+          <label class="field"><span class="lbl">藥局名稱</span><input id="org" type="text" placeholder="例：○○藥局"></label>
+          <label class="field"><span class="lbl">諮詢電話</span><input id="phone" type="text" placeholder="例：02-1234-5678"></label>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= 右：結果 ================= -->
+    <div class="col-output">
+      <div class="tabs no-print" role="tablist">
+        <button class="tab active" data-tab="sheetPane" type="button">衛教單預覽</button>
+        <button class="tab" data-tab="alertPane" type="button">藥師提醒 <b id="alertCount" class="pill"></b></button>
+        <span id="fitInfo" class="fit"></span>
       </div>
 
-      <h2>2. 腎功能</h2>
-      <div class="seg">
-        <label><input type="radio" name="mode" value="calc" checked> 由肌酸酐計算</label>
-        <label><input type="radio" name="mode" value="direct"> 直接輸入 eGFR / CrCl</label>
-      </div>
-      <div class="grid2" id="calcFields">
-        <label>血清肌酸酐 Scr<input id="scr" type="number" min="0.1" step="0.01" placeholder="mg/dL"></label>
-      </div>
-      <div class="grid2 hidden" id="directFields">
-        <label>eGFR<input id="egfrIn" type="number" min="0" step="0.1" placeholder="mL/min/1.73m²"></label>
-        <label>CrCl<input id="crclIn" type="number" min="0" step="0.1" placeholder="mL/min"></label>
-        <label class="span2">Scr（選填，Apixaban 減量判斷用）<input id="scrDirect" type="number" min="0.1" step="0.01" placeholder="mg/dL"></label>
-      </div>
-      <label class="check"><input id="dialysis" type="checkbox"> 目前接受透析</label>
-      <div id="renalResult" class="renal-result"></div>
-
-      <h2>3. 使用藥物</h2>
-      <div class="search">
-        <input id="drugSearch" type="text" autocomplete="off" placeholder="輸入學名、商品名或中文名，如 metformin、佳糖維">
-        <ul id="suggest" class="suggest hidden"></ul>
-      </div>
-      <p class="hint">找不到的藥可按 Enter 以自訂名稱加入（衛教單會提示需由藥師補充）。</p>
-      <ul id="selected" class="selected"></ul>
-
-      <h2>4. 衛教單資訊（選填）</h2>
-      <div class="grid2">
-        <label>醫療院所<input id="org" type="text" placeholder="例：○○醫院 藥劑部"></label>
-        <label>諮詢電話<input id="phone" type="text" placeholder="例：(02) 1234-5678 分機 123"></label>
-      </div>
-      <button id="demo" class="ghost" type="button">載入範例病人</button>
-    </section>
-
-    <!-- 右：結果 -->
-    <section class="output">
-      <div class="panel no-print" id="clinician">
-        <h2>藥師／醫師端提醒 <small>（不會印在衛教單上）</small></h2>
-        <div id="alerts"><p class="muted">輸入年齡、腎功能與藥物後，這裡會顯示依仿單的劑量建議。</p></div>
+      <div id="alertPane" class="card pane hidden no-print">
+        <p class="muted small">依健保署仿單與 Beers 2023 判斷；此頁不會印出。</p>
+        <div id="alerts"></div>
       </div>
 
-      <div class="toolbar no-print">
-        <span id="fitInfo" class="muted"></span>
-        <button id="print" type="button">列印 / 存成 PDF</button>
+      <div id="sheetPane" class="pane">
+        <div class="sheet-wrap"><article id="sheet" class="sheet"><div id="sheetInner" class="sheet-inner"></div></article></div>
       </div>
-
-      <div class="sheet-wrap">
-        <article id="sheet" class="sheet"><div id="sheetInner" class="sheet-inner"></div></article>
-      </div>
-    </section>
+    </div>
   </main>
 
   <script src="data/drugs.js"></script>
+  <script src="data/beers2023.js"></script>
+  <script src="data/tips.js"></script>
   <script src="js/renal.js"></script>
+  <script src="js/beers.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
