@@ -37,6 +37,7 @@
 | `js/app.js` | 介面互動、衛教單產生 |
 | `js/renal.js` | 腎功能計算（CKD-EPI 2021、Cockcroft-Gault）與仿單規則判斷 |
 | `js/beers.js` | Beers 2023 比對引擎 |
+| `js/icons.js` | 小卡圖示（時段、主題、注意）與依顏色形狀繪製的藥丸圖 |
 | `data/drugs.js` | 仿單資料（完整衛教內容，目前 14 個藥） |
 | `data/beers2023.js` | Beers 2023 規則與藥名字典（約 140 個學名，含常見中文商品名） |
 | `data/card.js` | 用藥小卡：時段、外觀、用途、提醒句子、多語言文字與勾選規則 |

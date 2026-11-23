@@ -1,4 +1,4 @@
-/* global DRUG_DB, Renal, Beers, CARD */
+/* global DRUG_DB, Renal, Beers, CARD, Icons */
 (function () {
   'use strict';
 
@@ -234,7 +234,7 @@
         '<div class="dr-head"><span class="nm"><b>' + esc(e.inf.title) + '</b> ' + esc(e.inf.en !== e.inf.title ? e.inf.en : '') + '<small>' + esc(e.inf.sub) + '</small></span>' +
         '<span class="lv lv-' + e.level + '">' + LEVEL_TEXT[e.level] + '</span>' +
         '<button class="rm" data-rm="' + i + '" title="移除" aria-label="移除 ' + esc(e.inf.title) + '">×</button></div>' +
-        '<div class="dr-edit">' +
+        '<div class="dr-edit"><span class="pv">' + Icons.pill(s.color, s.shape, '外觀預覽') + '</span>' +
         '<select data-i="' + i + '" data-f="color" aria-label="顏色">' + colors + '</select>' +
         '<select data-i="' + i + '" data-f="shape" aria-label="形狀">' + shapes + '</select>' +
         '<select data-i="' + i + '" data-f="qty" aria-label="每次顆數">' + qtys + '</select>' +
@@ -252,7 +252,7 @@
       var a = topicAuto(t, ctx), on = itemState(t.id, a.suggested);
       var text = t.id in edited ? edited[t.id] : sentence(a.keys, 'zh', ctx);
       return '<div class="pick' + (on ? '' : ' off') + '"><input type="checkbox" id="pk-' + t.id + '" data-pick="' + t.id + '"' + (on ? ' checked' : '') + '>' +
-        '<label for="pk-' + t.id + '" class="pbadge">' + ZH.badge[t.badge] + '</label>' +
+        '<label for="pk-' + t.id + '" class="pbadge">' + Icons.icon(t.badge) + ZH.badge[t.badge] + '</label>' +
         '<input type="text" class="ptext" id="pt-' + t.id + '" data-edit="' + t.id + '" value="' + esc(text) + '" aria-label="' + ZH.badge[t.badge] + '的句子">' +
         '<span class="sugg' + (a.suggested ? '' : ' ghost') + '">建議</span></div>';
     }).join('');
@@ -326,12 +326,12 @@
       var rows = CARD.SLOTS.concat(['none']).map(function (k) {
         var list = evals.filter(function (e) { return k === 'none' ? !e.s.slots.length : e.s.slots.indexOf(k) !== -1; });
         if (!list.length) return '';
-        return '<div class="c-row"><div class="c-badge">' + esc(k === 'none' ? T.asDirected : T.slot[k]) + '</div><div class="c-lines">' +
+        return '<div class="c-row"><div class="c-badge">' + Icons.slot(k) + '<span>' + esc(k === 'none' ? T.asDirected : T.slot[k]) + '</span></div><div class="c-lines">' +
           list.map(function (e) {
             var s = e.s;
             var line = CARD.LOOK_FMT[lang](s.color, s.shape, s.qty, s.unit, lang === 'zh' ? e.inf.title : e.inf.en);
             var ref = (s.color || s.shape) ? '<small>' + esc(e.inf.title + (e.inf.en && e.inf.en !== e.inf.title ? ' ' + e.inf.en : '')) + '</small>' : '';
-            return '<div class="c-line"><b>' + esc(line) + '</b>' + (lang === 'zh' ? '：' : ': ') + esc(T.purpose[s.purpose]) + ref + '</div>';
+            return '<div class="c-line">' + Icons.pill(s.color, s.shape) + '<span><b>' + esc(line) + '</b>' + (lang === 'zh' ? '：' : ': ') + esc(T.purpose[s.purpose]) + ref + '</span></div>';
           }).join('') + '</div></div>';
       }).join('');
       top += '<div class="c-table">' + rows + '</div>';
@@ -342,12 +342,12 @@
       var a = topicAuto(t, ctx);
       if (!itemState(t.id, a.suggested)) return;
       var text = t.id in edited ? edited[t.id] : sentence(a.keys, lang, ctx);
-      if (text.trim()) bot += '<div class="c-row c-tip"><div class="c-badge sm">' + esc(T.badge[t.badge]) + '</div><div class="c-text">' + esc(text) + '</div></div>';
+      if (text.trim()) bot += '<div class="c-row c-tip"><div class="c-badge sm">' + Icons.icon(t.badge) + '<span>' + esc(T.badge[t.badge]) + '</span></div><div class="c-text">' + esc(text) + '</div></div>';
     });
     var alerts = CARD.ALERTS.filter(function (al) { return itemState(al.id, ctx.alertSug.indexOf(al.id) !== -1); }).map(function (al) {
       return al.id in edited ? edited[al.id] : T.text[al.text];
     }).filter(function (x) { return x.trim(); });
-    if (alerts.length) bot += '<div class="c-alerts">' + alerts.map(function (a) { return '<div class="c-alert"><b>' + esc(T.badge.alert) + (lang === 'zh' ? '：' : ': ') + '</b>' + esc(a) + '</div>'; }).join('') + '</div>';
+    if (alerts.length) bot += '<div class="c-alerts">' + alerts.map(function (a) { return '<div class="c-alert">' + Icons.icon('alert') + '<span><b>' + esc(T.badge.alert) + (lang === 'zh' ? '：' : ': ') + '</b>' + esc(a) + '</span></div>'; }).join('') + '</div>';
     var phone = $('phone').value.trim();
     bot += '<div class="c-foot">' + esc(T.pharmacy) + (phone ? ' · ' + esc(phone) : '') + '</div>';
 
