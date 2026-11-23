@@ -27,28 +27,8 @@
   --radius: 14px;
   --font: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #141a19; --card: #1d2523; --field: #252e2c; --seg: #2b3533; --hover: #26302e;
-    --ink: #e6ebe9; --ink-2: #b8c2bf; --muted: #8a9592; --line: #33403d; --line-2: #445250;
-    --teal: #3f8a7f; --teal-hover: #4d9c90; --heading: #9fd3c8; --teal-l: #213b37; --teal-ink: #a9dcd1;
-    --rust: #e0956b; --rust-l: #3b2a21; --on-accent: #ffffff;
-    --ok: #7cc29a; --ok-bg: #1f3529; --caution: #e3b955; --caution-bg: #3a3119;
-    --adjust: #f0955d; --adjust-bg: #3d2a1d; --avoid: #f2766d; --avoid-bg: #3f2221; --unk: #a3aca9; --unk-bg: #2c3432;
-    --shadow: rgba(0, 0, 0, .35);
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #141a19; --card: #1d2523; --field: #252e2c; --seg: #2b3533; --hover: #26302e;
-  --ink: #e6ebe9; --ink-2: #b8c2bf; --muted: #8a9592; --line: #33403d; --line-2: #445250;
-  --teal: #3f8a7f; --teal-hover: #4d9c90; --heading: #9fd3c8; --teal-l: #213b37; --teal-ink: #a9dcd1;
-  --rust: #e0956b; --rust-l: #3b2a21; --on-accent: #ffffff;
-  --ok: #7cc29a; --ok-bg: #1f3529; --caution: #e3b955; --caution-bg: #3a3119;
-  --adjust: #f0955d; --adjust-bg: #3d2a1d; --avoid: #f2766d; --avoid-bg: #3f2221; --unk: #a3aca9; --unk-bg: #2c3432;
-  --shadow: rgba(0, 0, 0, .35);
-  color-scheme: dark;
-}
+/* 固定亮色介面：不跟隨系統深色模式 */
+:root, :root[data-theme="dark"] { color-scheme: light; }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
