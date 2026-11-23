@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>個人化用藥衛教單</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar no-print">
+    <h1>個人化用藥衛教單產生器</h1>
+    <span class="sub">年齡 × 腎功能 × 用藥 → 一頁衛教單（資料來源：健保署藥品仿單）</span>
+  </header>
+
+  <main class="layout">
+    <!-- 左：輸入 -->
+    <section class="panel no-print" id="form">
+      <h2>1. 病人基本資料</h2>
+      <div class="grid2">
+        <label>姓名（選填）<input id="name" type="text" placeholder="可留白"></label>
+        <label><span>年齡 <span class="req">*</span></span><input id="age" type="number" min="0" max="120" placeholder="歲"></label>
+        <label>性別
+          <select id="sex"><option value="M">男</option><option value="F">女</option></select>
+        </label>
+        <label>體重<input id="weight" type="number" min="1" step="0.1" placeholder="kg（計算 CrCl 用）"></label>
+      </div>
+
+      <h2>2. 腎功能</h2>
+      <div class="seg">
+        <label><input type="radio" name="mode" value="calc" checked> 由肌酸酐計算</label>
+        <label><input type="radio" name="mode" value="direct"> 直接輸入 eGFR / CrCl</label>
+      </div>
+      <div class="grid2" id="calcFields">
+        <label>血清肌酸酐 Scr<input id="scr" type="number" min="0.1" step="0.01" placeholder="mg/dL"></label>
+      </div>
+      <div class="grid2 hidden" id="directFields">
+        <label>eGFR<input id="egfrIn" type="number" min="0" step="0.1" placeholder="mL/min/1.73m²"></label>
+        <label>CrCl<input id="crclIn" type="number" min="0" step="0.1" placeholder="mL/min"></label>
+        <label class="span2">Scr（選填，Apixaban 減量判斷用）<input id="scrDirect" type="number" min="0.1" step="0.01" placeholder="mg/dL"></label>
+      </div>
+      <label class="check"><input id="dialysis" type="checkbox"> 目前接受透析</label>
+      <div id="renalResult" class="renal-result"></div>
+
+      <h2>3. 使用藥物</h2>
+      <div class="search">
+        <input id="drugSearch" type="text" autocomplete="off" placeholder="輸入學名、商品名或中文名，如 metformin、佳糖維">
+        <ul id="suggest" class="suggest hidden"></ul>
+      </div>
+      <p class="hint">找不到的藥可按 Enter 以自訂名稱加入（衛教單會提示需由藥師補充）。</p>
+      <ul id="selected" class="selected"></ul>
+
+      <h2>4. 衛教單資訊（選填）</h2>
+      <div class="grid2">
+        <label>醫療院所<input id="org" type="text" placeholder="例：○○醫院 藥劑部"></label>
+        <label>諮詢電話<input id="phone" type="text" placeholder="例：(02) 1234-5678 分機 123"></label>
+      </div>
+      <button id="demo" class="ghost" type="button">載入範例病人</button>
+    </section>
+
+    <!-- 右：結果 -->
+    <section class="output">
+      <div class="panel no-print" id="clinician">
+        <h2>藥師／醫師端提醒 <small>（不會印在衛教單上）</small></h2>
+        <div id="alerts"><p class="muted">輸入年齡、腎功能與藥物後，這裡會顯示依仿單的劑量建議。</p></div>
+      </div>
+
+      <div class="toolbar no-print">
+        <span id="fitInfo" class="muted"></span>
+        <button id="print" type="button">列印 / 存成 PDF</button>
+      </div>
+
+      <div class="sheet-wrap">
+        <article id="sheet" class="sheet"><div id="sheetInner" class="sheet-inner"></div></article>
+      </div>
+    </section>
+  </main>
+
+  <script src="data/drugs.js"></script>
+  <script src="js/renal.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
