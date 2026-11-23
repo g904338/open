@@ -428,7 +428,7 @@
       $('alertPane').classList.toggle('hidden', t.dataset.tab !== 'alertPane');
     });
   });
-  $('print').addEventListener('click', function () { window.print(); });
+  if ($('print')) $('print').addEventListener('click', function () { window.print(); });
 
   $('reset').addEventListener('click', function () {
     document.querySelectorAll('#surname, #age, #scr, #weight, #egfrIn, #crclIn, #scrDirect, #weightDirect, #customTips').forEach(function (el) { el.value = ''; });
