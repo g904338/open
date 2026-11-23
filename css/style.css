@@ -145,8 +145,6 @@ input:focus, textarea:focus { outline: none; border-color: var(--teal); box-shad
 .drug-list .nm { min-width: 0; line-height: 1.35; }
 .drug-list .nm b { font-weight: 700; }
 .drug-list .nm small { display: block; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.drug-list button { border: 0; background: none; color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer; padding: 2px 6px; border-radius: 6px; }
-.drug-list button:hover { color: var(--avoid); background: var(--avoid-bg); }
 .empty { text-align: center; color: var(--muted); font-size: 14px; padding: 18px 0 4px; margin: 0; }
 
 .lv { font-size: 12px; padding: 2px 9px; border-radius: 999px; white-space: nowrap; font-weight: 500; }
@@ -185,46 +183,68 @@ input:focus, textarea:focus { outline: none; border-color: var(--teal); box-shad
 .alert-sec { font-size: 15px; color: var(--heading); margin: 18px 0 4px; }
 .tag-unv { font-size: 11px; font-weight: 400; padding: 0 7px; border-radius: 999px; border: 1px solid var(--caution); color: var(--caution); }
 
-/* ===================== 衛教單 A4（紙張：兩種主題都維持白底） ===================== */
+/* ---------- 藥物編輯列 ---------- */
+.drug-list li { display: block; padding: 10px 10px 10px 12px; }
+.drug-list li::before { content: none; }
+.dr-head { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 8px; }
+.dr-head .rm { border: 0; background: none; color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer; padding: 2px 6px; border-radius: 6px; }
+.dr-head .rm:hover { color: var(--avoid); background: var(--avoid-bg); }
+.dr-edit { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.dr-edit select { font: inherit; font-size: 13px; padding: 5px 6px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--field); color: var(--ink); min-width: 0; }
+.dr-edit select.wide { flex: 1 1 110px; }
+.slots { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.slot { font: inherit; font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1.5px solid var(--line-2); background: transparent; color: var(--ink-2); cursor: pointer; }
+.slot.on { background: var(--teal); border-color: var(--teal); color: var(--on-accent); font-weight: 500; }
+
+/* ---------- 列印內容 ---------- */
+.pick-list { display: flex; flex-direction: column; gap: 6px; }
+.pick { display: grid; grid-template-columns: 20px auto minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.alert-pick { grid-template-columns: 20px minmax(0, 1fr) auto; }
+.pick input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--teal); margin: 0; }
+.pick.fixed { display: flex; gap: 8px; margin-bottom: 8px; font-weight: 500; }
+.pick.fixed small { color: var(--muted); font-weight: 400; }
+.pbadge { font-size: 13px; font-weight: 700; color: var(--on-accent); background: var(--teal); border-radius: 6px; padding: 3px 8px; cursor: pointer; white-space: nowrap; }
+.pick .ptext { font-size: 14px; padding: 6px 9px; }
+.alert-pick .ptext { color: var(--avoid); }
+.pick.off .pbadge { background: var(--line-2); }
+.pick.off .ptext { color: var(--muted); text-decoration: line-through; }
+.sugg.ghost { visibility: hidden; }
+.sub-h { font-size: 14px; color: var(--heading); margin: 16px 0 8px; }
+.sub-h small { font-weight: 400; color: var(--avoid); margin-left: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--teal); background: transparent; color: var(--teal-ink); cursor: pointer; }
+.chip.on { background: var(--teal); color: var(--on-accent); font-weight: 700; }
+.talk { margin-top: 6px; font-size: 13px; }
+.talk summary { cursor: pointer; color: var(--teal-ink); }
+
+/* ===================== 用藥小卡 A4（紙張：兩種主題都維持白底） ===================== */
 .sheet-wrap { overflow-x: auto; padding-bottom: 8px; }
 .sheet {
-  --p-ink: #1b1b1b; --p-sub: #555555; --p-line: #d5d0c4; --p-teal: #2f6b63; --p-teal-d: #1f4a44; --p-teal-l: #e4efec;
-  --p-rust: #a5502a; --p-adjust: #c25a1e; --p-avoid: #b3261e; --p-warn-bg: #fdf1ef; --p-me: #fff3e6; --p-me-ink: #7a3a00; --p-me-avoid: #fdeceb;
-  width: 210mm; height: 297mm; background: #ffffff; margin: 0 auto; box-shadow: 0 4px 24px var(--shadow); padding: 11mm 12mm; overflow: hidden; color: var(--p-ink); color-scheme: light;
+  --p-ink: #1b1b1b; --p-sub: #6b6b6b; --p-line: #cfd8d5; --p-teal: #2f6b63; --p-teal-d: #1f4a44; --p-rust: #a5502a; --p-avoid: #b3261e;
+  width: 210mm; height: 297mm; background: #ffffff; margin: 0 auto; box-shadow: 0 4px 24px var(--shadow); padding: 12mm 13mm;
+  color: var(--p-ink); color-scheme: light; display: grid; grid-template-rows: 2fr 1fr; gap: 5mm; overflow: hidden;
 }
-.sheet-inner { font-size: 13px; line-height: 1.55; }
-.sh-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1em; padding-bottom: .5em; border-bottom: 3px solid var(--p-teal); margin-bottom: .7em; }
-.sh-head h1 { margin: 0; font-size: 1.9em; font-weight: 900; color: var(--p-teal-d); letter-spacing: .06em; }
-.sh-head .org { text-align: right; font-size: .92em; color: var(--p-sub); }
-.sh-pt { display: flex; flex-wrap: wrap; gap: .3em 1.8em; background: var(--p-teal-l); border-radius: .5em; padding: .5em .9em; margin-bottom: .7em; font-size: 1.05em; }
-.sh-pt b { color: var(--p-teal-d); margin-right: .35em; }
-.sh-pt .kidney { flex-basis: 100%; }
-.sh-warn { border: 2px solid var(--p-avoid); background: var(--p-warn-bg); border-radius: .5em; padding: .45em .9em; margin-bottom: .7em; }
-.sh-warn b { color: var(--p-avoid); }
-.sh-sec { font-size: 1.1em; font-weight: 700; color: var(--p-teal-d); margin: .2em 0 .4em; display: flex; align-items: center; gap: .4em; }
-.sh-sec::before { content: ''; width: .35em; height: 1em; background: var(--p-rust); border-radius: 2px; }
-.sh-drugs { display: grid; grid-template-columns: repeat(var(--cols, 2), 1fr); gap: .55em; }
-.drug { border: 1px solid var(--p-line); border-radius: .5em; padding: .5em .7em; break-inside: avoid; }
-.drug.lv-adjust { border: 2px solid var(--p-adjust); }
-.drug.lv-avoid { border: 2px solid var(--p-avoid); }
-.drug h3 { margin: 0 0 .2em; font-size: 1.15em; line-height: 1.3; }
-.drug h3 small { font-weight: 400; color: var(--p-sub); font-size: .78em; margin-left: .3em; }
-.drug .r { margin: .12em 0; }
-.drug .k { font-weight: 700; color: var(--p-teal-d); }
-.drug .me { background: var(--p-me); color: var(--p-me-ink); border-radius: .35em; padding: .25em .5em; margin: .3em 0; font-weight: 700; }
-.drug.lv-avoid .me { background: var(--p-me-avoid); color: var(--p-avoid); }
-.drug .danger, .drug .danger .k { color: var(--p-avoid); }
-.sh-inter { border: 1.5px dashed var(--p-adjust); border-radius: .5em; padding: .4em .8em; margin: .7em 0 0; }
-.sh-inter h4 { margin: 0 0 .2em; color: var(--p-adjust); font-size: 1.05em; }
-.sh-inter ul { margin: 0; padding-left: 1.2em; }
-.sh-tips { margin-top: .7em; }
-.sh-tips .cols { columns: 2; column-gap: 1.6em; }
-.sh-tips .grp { break-inside: avoid; margin-bottom: .35em; }
-.sh-tips .grp b { color: var(--p-rust); font-size: .95em; }
-.sh-tips ul { margin: .1em 0 0; padding-left: 1.2em; }
-.sh-foot { margin-top: .8em; padding-top: .45em; border-top: 1px solid var(--p-line); display: flex; justify-content: space-between; gap: 1em; font-size: .85em; color: var(--p-sub); }
-.sh-empty { color: var(--p-sub); text-align: center; padding-top: 60mm; font-size: 1.2em; }
-.sheet.compact .opt, .sheet.compact2 .opt2 { display: none; }
+.sheet-top, .sheet-bottom { min-height: 0; overflow: hidden; }
+.sheet-bottom { border-top: 2px solid var(--p-teal); padding-top: 4mm; }
+#topInner, #botInner { line-height: 1.45; }
+.c-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1em; margin-bottom: .7em; }
+.c-head h1 { margin: 0; font-size: 1.45em; font-weight: 900; color: var(--p-teal-d); letter-spacing: .04em; }
+.c-meta { text-align: right; font-size: .6em; color: var(--p-sub); white-space: nowrap; }
+.c-empty { color: var(--p-sub); text-align: center; padding-top: 3em; }
+.c-row { display: grid; grid-template-columns: 4.6em minmax(0, 1fr); gap: .8em; align-items: start; padding: .5em 0; border-bottom: 1.5px dashed var(--p-line); }
+.c-table .c-row:last-child { border-bottom: 0; }
+.c-badge { background: var(--p-teal); color: #ffffff; font-weight: 700; border-radius: .35em; padding: .3em .2em; text-align: center; line-height: 1.25; }
+.c-lines { display: flex; flex-direction: column; gap: .2em; padding-top: .15em; }
+.c-line small { font-size: .62em; color: var(--p-sub); margin-left: .6em; font-weight: 400; white-space: nowrap; }
+.c-tip { grid-template-columns: 3.6em minmax(0, 1fr); padding: .35em 0; }
+.sheet.lang-en .c-row { grid-template-columns: 6.2em minmax(0, 1fr); }
+.sheet.lang-en .c-tip { grid-template-columns: 4.8em minmax(0, 1fr); }
+.c-badge { overflow-wrap: anywhere; }
+.c-badge.sm { padding: .15em .2em; }
+.c-text { padding-top: .1em; }
+.c-alerts { margin-top: .5em; display: flex; flex-direction: column; gap: .2em; }
+.c-alert { color: var(--p-rust); font-weight: 700; }
+.c-foot { margin-top: .6em; font-size: .85em; color: var(--p-sub); }
 
 @media print {
   @page { size: A4; margin: 0; }
@@ -233,6 +253,7 @@ input:focus, textarea:focus { outline: none; border-color: var(--teal); box-shad
   .layout { display: block; padding: 0; }
   .col-output { position: static; }
   #sheetPane { display: block !important; }
+  .sheet { display: grid !important; }
   .sheet-wrap { overflow: visible; padding: 0; }
   .sheet { box-shadow: none; margin: 0; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }

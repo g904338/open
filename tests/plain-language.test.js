@@ -3,7 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert');
 const DB = require('../data/drugs.js');
 const B = require('../data/beers2023.js');
-const { TIPS } = require('../data/tips.js');
+const CARD = require('../data/card.js');
 
 const JARGON = ['eGFR', 'CrCl', 'NSAID', '抗凝血', '中樞', '酮酸', '乳酸', '胰臟炎', '磺醯脲', '侵入性', '肌腱', '抗膽鹼',
   '鉀離子', '禁用', '適應症', '監測', '腎絲球', '清除率', '代謝', '顯影劑', '電解質', '低血鈉', '高血鉀', '透析', '劑量',
@@ -21,7 +21,8 @@ function patientTexts() {
   B.ITEMS.forEach(i => out.push([i.id, i.patient]));
   B.INTERACTIONS.forEach(i => out.push([i.id, i.patient]));
   Object.entries(B.LEXICON).forEach(([k, e]) => out.push([k + '.use', e.use]));
-  TIPS.forEach(t => out.push([t.id, t.text]));
+  const Z = CARD.STR.zh;
+  for (const sec of ['slot', 'color', 'shape', 'purpose', 'badge', 'text']) Object.entries(Z[sec]).forEach(([k, v]) => out.push(['card.' + sec + '.' + k, v]));
   return out;
 }
 

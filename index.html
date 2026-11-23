@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>用藥衛教單</title>
+  <title>長者用藥小卡</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
   <header class="topbar no-print">
     <div class="brand">
       <span class="eyebrow">社區藥局 · 長者用藥評估</span>
-      <h1>用藥衛教單</h1>
+      <h1>用藥小卡</h1>
     </div>
     <div class="top-actions">
       <button id="demo" class="btn ghost" type="button">載入範例</button>
@@ -31,7 +31,7 @@
         <div class="row-fields">
           <label class="field">
             <span class="lbl">姓氏</span>
-            <input id="surname" type="text" maxlength="4" placeholder="例：王">
+            <input id="surname" type="text" maxlength="4" placeholder="例：林">
           </label>
           <div class="field">
             <span class="lbl">性別</span>
@@ -44,6 +44,13 @@
             <span class="lbl">年齡</span>
             <div class="unit"><input id="age" type="number" min="0" max="120" inputmode="numeric" placeholder="例：78"><em>歲</em></div>
           </label>
+        </div>
+        <div class="field mt">
+          <span class="lbl">小卡上的稱呼</span>
+          <div class="seg seg-sm" role="radiogroup" aria-label="稱呼">
+            <label><input type="radio" name="hon" value="std"><span id="honStd">先生</span></label>
+            <label><input type="radio" name="hon" value="elder"><span id="honElder">阿公</span></label>
+          </div>
         </div>
 
         <details id="renalBox" class="optional">
@@ -78,18 +85,23 @@
           <textarea id="bulkText" rows="5" placeholder="每行一個，或用逗號、頓號分隔，例如：&#10;metformin&#10;脈優&#10;Xanax、普拿疼"></textarea>
           <div class="bulk-actions"><span id="bulkMsg" class="muted"></span><button id="bulkAdd" class="btn small" type="button">全部加入</button></div>
         </details>
+        <p class="muted small mt">請依藥袋設定每個藥的<b>外觀、顆數、時間</b>；時間和用途已先帶入常見設定。</p>
         <ol id="selected" class="drug-list"></ol>
         <p id="drugEmpty" class="empty">尚未加入藥物</p>
       </section>
 
       <section class="card">
-        <div class="card-head"><span class="num">03</span><h2>衛教項目</h2><span class="hint-inline">勾選的項目才會印出</span></div>
-        <p class="muted small">系統已依年齡、腎功能與用藥 <span class="sugg">建議</span> 勾選，請藥師確認。</p>
-        <div id="tipList" class="tip-list"></div>
-        <label class="field mt">
-          <span class="lbl">其他叮嚀 <small>(每行一項)</small></span>
-          <textarea id="customTips" rows="2" placeholder="例：下次回診請空腹抽血"></textarea>
-        </label>
+        <div class="card-head"><span class="num">03</span><h2>列印內容</h2><span class="hint-inline">勾選的項目才會印出</span></div>
+        <label class="pick fixed"><input type="checkbox" checked disabled><span class="pick-t">用藥時間表 <small>（小卡上方約 2/3）</small></span></label>
+        <p class="muted small">下方 1/3：系統依年齡、腎功能和用藥 <span class="sugg">建議</span> 勾選；句子可以直接修改。</p>
+        <div id="topicList" class="pick-list"></div>
+        <h3 class="sub-h">注意事項 <small>紅字</small></h3>
+        <div id="alertList" class="pick-list"></div>
+
+        <h3 class="sub-h">列印語言</h3>
+        <div id="langChips" class="chips" role="radiogroup" aria-label="列印語言"></div>
+        <p id="langNote" class="muted small hidden"></p>
+
         <div class="row-fields mt">
           <label class="field"><span class="lbl">藥局名稱</span><input id="org" type="text" placeholder="例：○○藥局"></label>
           <label class="field"><span class="lbl">諮詢電話</span><input id="phone" type="text" placeholder="例：02-1234-5678"></label>
@@ -100,25 +112,28 @@
     <!-- ================= 右：結果 ================= -->
     <div class="col-output">
       <div class="tabs no-print" role="tablist">
-        <button class="tab active" data-tab="sheetPane" type="button">衛教單預覽</button>
+        <button class="tab active" data-tab="sheetPane" type="button">小卡預覽</button>
         <button class="tab" data-tab="alertPane" type="button">藥師提醒 <b id="alertCount" class="pill"></b></button>
         <span id="fitInfo" class="fit"></span>
       </div>
 
       <div id="alertPane" class="card pane hidden no-print">
-        <p class="muted small">依健保署仿單與 Beers 2023 判斷；此頁不會印出。</p>
+        <p class="muted small">依健保署仿單與 Beers 2023 判斷；此頁不會印出。口頭衛教時可參考各藥的詳細說明。</p>
         <div id="alerts"></div>
       </div>
 
       <div id="sheetPane" class="pane">
-        <div class="sheet-wrap"><article id="sheet" class="sheet"><div id="sheetInner" class="sheet-inner"></div></article></div>
+        <div class="sheet-wrap"><article id="sheet" class="sheet">
+          <div id="sheetTop" class="sheet-top"><div id="topInner"></div></div>
+          <div id="sheetBottom" class="sheet-bottom"><div id="botInner"></div></div>
+        </article></div>
       </div>
     </div>
   </main>
 
   <script src="data/drugs.js"></script>
   <script src="data/beers2023.js"></script>
-  <script src="data/tips.js"></script>
+  <script src="data/card.js"></script>
   <script src="js/renal.js"></script>
   <script src="js/beers.js"></script>
   <script src="js/app.js"></script>
